@@ -7,15 +7,16 @@
 //--------------------------------------------------------------------------------------
 
 var express = require('express');                           // Libreria base de express
+var path = require('path');
 var bodyParser = require('body-parser');                    // Libreria para manejar la lectura del cuerpo de una respuesta REST
 var cors = require('cors');                                 // Libreria para manejar el protocolo CORS
-const config = require('./config/config.js');               // Configuración del servidor
+const config = require('./config.js');                      // Configuración del servidor
 
 //---------------------------------------------------------------------------------------
 // Rutas
 //---------------------------------------------------------------------------------------
 
-var login = require('./routes/login.route');                    // API para el manejo de login y la información del usuario
+var main = require('./routes/main.route');                    // API para el manejo de login y la información del usuario
 
 //---------------------------------------------------------------------------------------
 // Servidor
@@ -35,19 +36,14 @@ app.use(function(req, res, next) {
     next();
   });
 
-app.use('/', login);
+app.use('/', main);
 
 // Maneja el error 404
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    gLog.error("El elemento no se encontró: " + req.body);
-    next(err);
+    res.sendFile(path.join(__dirname + '/static/not_found.html'));
 });
-
-connection.init();
  
-var server = app.listen(3000, function() {
+var server = app.listen(8080, function() {
     var host = '0.0.0.0';
     var port = server.address().port;
     console.log('Servidor corriendo en http://%s:%s', host, port);
